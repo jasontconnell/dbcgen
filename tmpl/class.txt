@@ -1,0 +1,15 @@
+using LPGALiveScoring.Data;
+using Newtonsoft.Json;
+using System;
+
+namespace Hero.Services.LiveScoring.StrokePlay.Model
+{
+    [JsonObject]
+    public class {{.ObjectName}}
+    {
+        {{ range $idx, $prop := .Properties }}
+        [JsonProperty("{{$prop.AltName}}")]
+        public {{$prop.CodeType}} {{$prop.Name}} { get; set; }
+        {{ end }}
+    }
+}
