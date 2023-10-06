@@ -25,7 +25,7 @@ func getUnderscoreLowercaseName(name string) string {
 func getCamelCaseName(name string) string {
 	asTitle := getCleanName(name)
 	start := 0
-	for _, x := range name {
+	for _, x := range asTitle {
 		if unicode.IsUpper(x) {
 			start++
 		} else {
