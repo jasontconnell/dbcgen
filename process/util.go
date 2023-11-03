@@ -13,6 +13,10 @@ func getCleanName(name string) string {
 	return prefix + strings.Replace(strings.Replace(strings.Title(name), "-", "", -1), " ", "", -1)
 }
 
+func getExactName(name string) string {
+	return name
+}
+
 func getUnderscoreUppercaseName(name string) string {
 	name = strings.Replace(strings.Title(name), " ", "_", -1)
 	return getCleanName(name)
@@ -49,6 +53,8 @@ func getCleanNameFunc(setting string) func(string) string {
 		ret = getUnderscoreUppercaseName
 	case "lowercaseunderscore":
 		ret = getUnderscoreLowercaseName
+	case "exact":
+		ret = getExactName
 	default:
 		panic("Name style not recognized: " + setting)
 	}
