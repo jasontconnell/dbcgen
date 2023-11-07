@@ -9,16 +9,18 @@ type Type struct {
 type TypeMap map[string]Type
 
 type Object struct {
-	ObjectName string
-	Properties []Property
+	ObjectName      string
+	ObjectCleanName string
+	Properties      []Property
 }
 
 type Property struct {
-	CodeType     string
-	ColumnName   string
-	ColumnLength int64
-	DbTypeDef    string
-	CleanName    string
-	AltName      string
-	Key          bool
+	CodeType      string
+	ColumnName    string
+	ColumnLength  int64
+	DbTypeDef     string
+	CleanName     string
+	AltName       string
+	Key           bool
+	AutoIncrement bool
 }

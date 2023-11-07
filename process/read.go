@@ -79,7 +79,16 @@ func Read(connstr, table string) (data.Table, error) {
 
 func readCols(conn *sql.DB, tableName string) ([]data.Column, error) {
 	query := fmt.Sprintf(`
-	select c.COLUMN_NAME, c.ORDINAL_POSITION, c.IS_NULLABLE, c.DATA_TYPE, c.CHARACTER_MAXIMUM_LENGTH, c.NUMERIC_PRECISION, c.NUMERIC_SCALE, case when tc.CONSTRAINT_TYPE = 'PRIMARY KEY' then 1 else 0 end as IS_PRIMARY_KEY
+	select 
+		c.COLUMN_NAME, 
+		c.ORDINAL_POSITION, 
+		c.IS_NULLABLE, 
+		c.DATA_TYPE, 
+		c.CHARACTER_MAXIMUM_LENGTH, 
+		c.NUMERIC_PRECISION, 
+		c.NUMERIC_SCALE, 
+		case when tc.CONSTRAINT_TYPE = 'PRIMARY KEY' then 1 else 0 end as IS_PRIMARY_KEY,
+		COLUMNPROPERTY(object_id(c.TABLE_SCHEMA+'.'+c.TABLE_NAME), c.COLUMN_NAME, 'IsIdentity') as IS_IDENTITY
 	from INFORMATION_SCHEMA.COLUMNS c 
 		left join INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE cons
 			join INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
@@ -100,14 +109,15 @@ func readCols(conn *sql.DB, tableName string) ([]data.Column, error) {
 	cols := []data.Column{}
 	for _, row := range rows {
 		col := data.Column{
-			Name:         row["COLUMN_NAME"].(string),
-			Type:         row["DATA_TYPE"].(string),
-			CharLen:      readNullable[int64](row["CHARACTER_MAXIMUM_LENGTH"], 0),
-			NumPrecision: readNullable[int64](row["NUMERIC_PRECISION"], 0),
-			NumScale:     readNullable[int64](row["NUMERIC_SCALE"], 0),
-			Pos:          row["ORDINAL_POSITION"].(int64),
-			Nullable:     row["IS_NULLABLE"].(string) != "NO",
-			PrimaryKey:   row["IS_PRIMARY_KEY"].(int64) == 1,
+			Name:          row["COLUMN_NAME"].(string),
+			Type:          row["DATA_TYPE"].(string),
+			CharLen:       readNullable[int64](row["CHARACTER_MAXIMUM_LENGTH"], 0),
+			NumPrecision:  readNullable[int64](row["NUMERIC_PRECISION"], 0),
+			NumScale:      readNullable[int64](row["NUMERIC_SCALE"], 0),
+			Pos:           row["ORDINAL_POSITION"].(int64),
+			Nullable:      row["IS_NULLABLE"].(string) != "NO",
+			PrimaryKey:    row["IS_PRIMARY_KEY"].(int64) == 1,
+			AutoIncrement: row["IS_IDENTITY"].(int64) == 1,
 		}
 		cols = append(cols, col)
 	}

@@ -36,7 +36,7 @@ func getObject(tbl data.Table, name, nameStyle, altNameStyle string, typeMap dat
 		im[s] = true
 	}
 
-	obj := data.Object{ObjectName: name}
+	obj := data.Object{ObjectName: name, ObjectCleanName: nameFunc(name)}
 	for _, c := range tbl.Columns {
 		if _, ok := im[c.Name]; ok {
 			continue
@@ -66,7 +66,16 @@ func getObject(tbl data.Table, name, nameStyle, altNameStyle string, typeMap dat
 			typedef += fmt.Sprintf("(%d, %d)", c.NumPrecision, c.NumScale)
 		}
 
-		p := data.Property{CodeType: ct.CodeType, CleanName: nameFunc(name), ColumnName: colname, DbTypeDef: typedef, ColumnLength: c.CharLen, AltName: altNameFunc(name), Key: c.PrimaryKey}
+		p := data.Property{
+			CodeType:      ct.CodeType,
+			CleanName:     nameFunc(name),
+			ColumnName:    colname,
+			DbTypeDef:     typedef,
+			ColumnLength:  c.CharLen,
+			AltName:       altNameFunc(name),
+			Key:           c.PrimaryKey,
+			AutoIncrement: c.AutoIncrement,
+		}
 		obj.Properties = append(obj.Properties, p)
 	}
 	return obj
