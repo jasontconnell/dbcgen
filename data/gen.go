@@ -8,7 +8,9 @@ type Object struct {
 }
 
 type Property struct {
-	CodeType string
-	Name     string
-	AltName  string
+	CodeType   string
+	ColumnName string
+	CleanName  string
+	AltName    string
+	Key        bool
 }

@@ -6,8 +6,11 @@ type Table struct {
 }
 
 type Column struct {
-	Name     string
-	Type     string
-	Pos      int64
-	Nullable bool
+	CleanName  string
+	AltName    string
+	Name       string
+	Type       string
+	Pos        int64
+	Nullable   bool
+	PrimaryKey bool
 }

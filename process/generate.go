@@ -52,7 +52,7 @@ func getObject(tbl data.Table, name, nameStyle, altNameStyle string, typeMap dat
 			name = n
 		}
 
-		p := data.Property{CodeType: ct, Name: nameFunc(name), AltName: altNameFunc(name)}
+		p := data.Property{CodeType: ct, CleanName: nameFunc(name), ColumnName: name, AltName: altNameFunc(name), Key: c.PrimaryKey}
 		obj.Properties = append(obj.Properties, p)
 	}
 	return obj

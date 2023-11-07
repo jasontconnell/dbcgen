@@ -14,7 +14,11 @@ func getCleanName(name string) string {
 }
 
 func getExactName(name string) string {
-	return name
+	prefix := ""
+	if strings.IndexAny(name, "0123456789") == 0 {
+		prefix = "_"
+	}
+	return prefix + strings.Replace(strings.Replace(name, "-", "", -1), " ", "", -1)
 }
 
 func getUnderscoreUppercaseName(name string) string {
