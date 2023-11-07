@@ -59,7 +59,14 @@ func getObject(tbl data.Table, name, nameStyle, altNameStyle string, typeMap dat
 			name = n
 		}
 
-		p := data.Property{CodeType: ct.CodeType, CleanName: nameFunc(name), ColumnName: colname, ColumnLength: c.CharLen, AltName: altNameFunc(name), Key: c.PrimaryKey}
+		typedef := c.Type
+		if c.CharLen > 0 {
+			typedef += fmt.Sprintf("(%d)", c.CharLen)
+		} else if c.NumPrecision > 0 && c.Type != "int" {
+			typedef += fmt.Sprintf("(%d, %d)", c.NumPrecision, c.NumScale)
+		}
+
+		p := data.Property{CodeType: ct.CodeType, CleanName: nameFunc(name), ColumnName: colname, DbTypeDef: typedef, ColumnLength: c.CharLen, AltName: altNameFunc(name), Key: c.PrimaryKey}
 		obj.Properties = append(obj.Properties, p)
 	}
 	return obj

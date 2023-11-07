@@ -37,7 +37,7 @@ func main() {
 		}
 		list = append(list, tbl)
 	} else {
-		tbls, err := process.ReadAll(cfg.ConnectionString)
+		tbls, err := process.ReadAll(cfg.ConnectionString, cfg.GenerateOptions.Ignore)
 		if err != nil {
 			log.Fatal(err)
 		}

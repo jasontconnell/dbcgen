@@ -17,6 +17,7 @@ type Property struct {
 	CodeType     string
 	ColumnName   string
 	ColumnLength int64
+	DbTypeDef    string
 	CleanName    string
 	AltName      string
 	Key          bool

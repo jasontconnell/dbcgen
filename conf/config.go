@@ -14,6 +14,7 @@ type GenerateOptions struct {
 	NameStyle      string   `json:"nameStyle"`
 	AltNameStyle   string   `json:"altNameStyle"`
 	NullableFormat string   `json:"nullableFormat"`
+	Ignore         []string `json:"ignore"`
 	IgnoreFields   []string `json:"ignoreFields"`
 	Renames        []Rename `json:"renames"`
 }
