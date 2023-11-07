@@ -47,12 +47,19 @@ func getObject(tbl data.Table, name, nameStyle, altNameStyle string, typeMap dat
 			continue
 		}
 
+		lkey := fmt.Sprintf("%s_%d", c.Type, c.CharLen)
+		special, ok := typeMap[lkey]
+		if ok {
+			ct = special
+		}
+
+		colname := c.Name
 		name := c.Name
 		if n, ok := renames[c.Name]; ok {
 			name = n
 		}
 
-		p := data.Property{CodeType: ct, CleanName: nameFunc(name), ColumnName: name, AltName: altNameFunc(name), Key: c.PrimaryKey}
+		p := data.Property{CodeType: ct.CodeType, CleanName: nameFunc(name), ColumnName: colname, ColumnLength: c.CharLen, AltName: altNameFunc(name), Key: c.PrimaryKey}
 		obj.Properties = append(obj.Properties, p)
 	}
 	return obj

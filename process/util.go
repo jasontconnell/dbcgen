@@ -1,16 +1,23 @@
 package process
 
 import (
+	"regexp"
 	"strings"
 	"unicode"
 )
+
+var cleanreg *regexp.Regexp = regexp.MustCompile("[^a-zA-Z0-9 \\-_]+")
+
+func clean(name string) string {
+	return cleanreg.ReplaceAllString(name, "")
+}
 
 func getCleanName(name string) string {
 	prefix := ""
 	if strings.IndexAny(name, "0123456789") == 0 {
 		prefix = "_"
 	}
-	return prefix + strings.Replace(strings.Replace(strings.Title(name), "-", "", -1), " ", "", -1)
+	return prefix + strings.Replace(strings.Replace(strings.Title(clean(name)), "-", "", -1), " ", "", -1)
 }
 
 func getExactName(name string) string {
@@ -18,7 +25,7 @@ func getExactName(name string) string {
 	if strings.IndexAny(name, "0123456789") == 0 {
 		prefix = "_"
 	}
-	return prefix + strings.Replace(strings.Replace(name, "-", "", -1), " ", "", -1)
+	return prefix + strings.Replace(strings.Replace(clean(name), "-", "", -1), " ", "", -1)
 }
 
 func getUnderscoreUppercaseName(name string) string {

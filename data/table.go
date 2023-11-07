@@ -10,6 +10,7 @@ type Column struct {
 	AltName    string
 	Name       string
 	Type       string
+	CharLen    int64
 	Pos        int64
 	Nullable   bool
 	PrimaryKey bool

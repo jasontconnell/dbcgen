@@ -71,7 +71,7 @@ func Read(connstr, table string) (data.Table, error) {
 
 func readCols(conn *sql.DB, tableName string) ([]data.Column, error) {
 	query := fmt.Sprintf(`
-	select c.COLUMN_NAME, c.ORDINAL_POSITION, c.IS_NULLABLE, c.DATA_TYPE, case when tc.CONSTRAINT_TYPE = 'PRIMARY KEY' then 1 else 0 end as IS_PRIMARY_KEY
+	select c.COLUMN_NAME, c.ORDINAL_POSITION, c.IS_NULLABLE, c.DATA_TYPE, c.CHARACTER_MAXIMUM_LENGTH, case when tc.CONSTRAINT_TYPE = 'PRIMARY KEY' then 1 else 0 end as IS_PRIMARY_KEY
 	from INFORMATION_SCHEMA.COLUMNS c 
 		left join INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE cons
 			join INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
@@ -91,9 +91,14 @@ func readCols(conn *sql.DB, tableName string) ([]data.Column, error) {
 
 	cols := []data.Column{}
 	for _, row := range rows {
+		var clen int64
+		if row["CHARACTER_MAXIMUM_LENGTH"] != nil {
+			clen = row["CHARACTER_MAXIMUM_LENGTH"].(int64)
+		}
 		col := data.Column{
 			Name:       row["COLUMN_NAME"].(string),
 			Type:       row["DATA_TYPE"].(string),
+			CharLen:    clen,
 			Pos:        row["ORDINAL_POSITION"].(int64),
 			Nullable:   row["IS_NULLABLE"].(string) != "NO",
 			PrimaryKey: row["IS_PRIMARY_KEY"].(int64) == 1,

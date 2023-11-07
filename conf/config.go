@@ -20,6 +20,7 @@ type GenerateOptions struct {
 
 type Type struct {
 	DbType   string `json:"dbType"`
+	CharLen  int64  `json:"charLen"`
 	CodeType string `json:"codeType"`
 }
 

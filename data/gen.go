@@ -1,6 +1,12 @@
 package data
 
-type TypeMap map[string]string
+type Type struct {
+	DbType   string
+	CharLen  int64
+	CodeType string
+}
+
+type TypeMap map[string]Type
 
 type Object struct {
 	ObjectName string
@@ -8,9 +14,10 @@ type Object struct {
 }
 
 type Property struct {
-	CodeType   string
-	ColumnName string
-	CleanName  string
-	AltName    string
-	Key        bool
+	CodeType     string
+	ColumnName   string
+	ColumnLength int64
+	CleanName    string
+	AltName      string
+	Key          bool
 }
