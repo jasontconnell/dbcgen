@@ -66,8 +66,13 @@ func getObject(tbl data.Table, name, nameStyle, altNameStyle string, typeMap dat
 			typedef += fmt.Sprintf("(%d, %d)", c.NumPrecision, c.NumScale)
 		}
 
+		codeType := ct.CodeType
+		if c.Nullable && ct.NullableCodeType != "" {
+			codeType = ct.NullableCodeType
+		}
+
 		p := data.Property{
-			CodeType:      ct.CodeType,
+			CodeType:      codeType,
 			CleanName:     nameFunc(name),
 			ColumnName:    colname,
 			DbTypeDef:     typedef,
@@ -75,6 +80,7 @@ func getObject(tbl data.Table, name, nameStyle, altNameStyle string, typeMap dat
 			AltName:       altNameFunc(name),
 			Key:           c.PrimaryKey,
 			AutoIncrement: c.AutoIncrement,
+			Nullable:      c.Nullable,
 		}
 		obj.Properties = append(obj.Properties, p)
 	}

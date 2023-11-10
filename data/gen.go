@@ -1,9 +1,10 @@
 package data
 
 type Type struct {
-	DbType   string
-	CharLen  int64
-	CodeType string
+	DbType           string
+	CharLen          int64
+	CodeType         string
+	NullableCodeType string
 }
 
 type TypeMap map[string]Type
@@ -23,4 +24,5 @@ type Property struct {
 	AltName       string
 	Key           bool
 	AutoIncrement bool
+	Nullable      bool
 }

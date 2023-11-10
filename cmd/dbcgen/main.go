@@ -49,12 +49,13 @@ func main() {
 		renames[r.From] = r.To
 	}
 
+	typeMap := getTypeMap(cfg.GenerateOptions.Types)
 	for _, tbl := range list {
 		cname := *objname
 		if *alltables {
 			cname = tbl.Name
 		}
-		code, err := process.Generate(tbl, cname, cfg.GenerateOptions.NameStyle, cfg.GenerateOptions.AltNameStyle, cfg.TemplateLocation, getTypeMap(cfg.GenerateOptions.Types), cfg.GenerateOptions.IgnoreFields, renames)
+		code, err := process.Generate(tbl, cname, cfg.GenerateOptions.NameStyle, cfg.GenerateOptions.AltNameStyle, cfg.TemplateLocation, typeMap, cfg.GenerateOptions.IgnoreFields, renames)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -77,7 +78,7 @@ func getTypeMap(types []conf.Type) data.TypeMap {
 		if t.CharLen > 0 {
 			key += fmt.Sprintf("_%d", t.CharLen)
 		}
-		m[key] = data.Type{DbType: t.DbType, CharLen: t.CharLen, CodeType: t.CodeType}
+		m[key] = data.Type{DbType: t.DbType, CharLen: t.CharLen, CodeType: t.CodeType, NullableCodeType: t.NullableCodeType}
 	}
 	return m
 }
