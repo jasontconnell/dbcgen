@@ -47,12 +47,6 @@ func getObject(tbl data.Table, name, nameStyle, altNameStyle string, typeMap dat
 			continue
 		}
 
-		lkey := fmt.Sprintf("%s_%d", c.Type, c.CharLen)
-		special, ok := typeMap[lkey]
-		if ok {
-			ct = special
-		}
-
 		colname := c.Name
 		name := c.Name
 		if n, ok := renames[c.Name]; ok {
@@ -69,6 +63,10 @@ func getObject(tbl data.Table, name, nameStyle, altNameStyle string, typeMap dat
 		codeType := ct.CodeType
 		if c.Nullable && ct.NullableCodeType != "" {
 			codeType = ct.NullableCodeType
+		}
+
+		if c.CharLen > 1 && ct.StringType != "" {
+			codeType = ct.StringType
 		}
 
 		p := data.Property{

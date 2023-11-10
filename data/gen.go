@@ -2,9 +2,9 @@ package data
 
 type Type struct {
 	DbType           string
-	CharLen          int64
 	CodeType         string
 	NullableCodeType string
+	StringType       string
 }
 
 type TypeMap map[string]Type

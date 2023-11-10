@@ -75,10 +75,7 @@ func getTypeMap(types []conf.Type) data.TypeMap {
 	for _, t := range types {
 
 		key := fmt.Sprintf("%s", t.DbType)
-		if t.CharLen > 0 {
-			key += fmt.Sprintf("_%d", t.CharLen)
-		}
-		m[key] = data.Type{DbType: t.DbType, CharLen: t.CharLen, CodeType: t.CodeType, NullableCodeType: t.NullableCodeType}
+		m[key] = data.Type{DbType: t.DbType, StringType: t.StringType, CodeType: t.CodeType, NullableCodeType: t.NullableCodeType}
 	}
 	return m
 }

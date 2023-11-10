@@ -21,9 +21,9 @@ type GenerateOptions struct {
 
 type Type struct {
 	DbType           string `json:"dbType"`
-	CharLen          int64  `json:"charLen"`
 	CodeType         string `json:"codeType"`
 	NullableCodeType string `json:"nullableCodeType"`
+	StringType       string `json:"stringType"`
 }
 
 type Rename struct {
