@@ -23,6 +23,7 @@ type Property struct {
 	CleanName     string
 	AltName       string
 	Key           bool
+	ForeignKey    bool
 	AutoIncrement bool
 	Nullable      bool
 }

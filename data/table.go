@@ -16,5 +16,6 @@ type Column struct {
 	Pos           int64
 	Nullable      bool
 	PrimaryKey    bool
+	ForeignKey    bool
 	AutoIncrement bool
 }

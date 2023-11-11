@@ -77,6 +77,7 @@ func getObject(tbl data.Table, name, nameStyle, altNameStyle string, typeMap dat
 			ColumnLength:  c.CharLen,
 			AltName:       altNameFunc(name),
 			Key:           c.PrimaryKey,
+			ForeignKey:    c.ForeignKey,
 			AutoIncrement: c.AutoIncrement,
 			Nullable:      c.Nullable,
 		}

@@ -87,16 +87,24 @@ func readCols(conn *sql.DB, tableName string) ([]data.Column, error) {
 		c.CHARACTER_MAXIMUM_LENGTH, 
 		c.NUMERIC_PRECISION, 
 		c.NUMERIC_SCALE, 
-		case when tc.CONSTRAINT_TYPE = 'PRIMARY KEY' then 1 else 0 end as IS_PRIMARY_KEY,
+		case when tcpk.CONSTRAINT_TYPE = 'PRIMARY KEY' then 1 else 0 end as IS_PRIMARY_KEY,
+        case when tcfk.CONSTRAINT_TYPE = 'FOREIGN KEY' then 1 else 0 end as IS_FOREIGN_KEY,
 		COLUMNPROPERTY(object_id(c.TABLE_SCHEMA+'.'+c.TABLE_NAME), c.COLUMN_NAME, 'IsIdentity') as IS_IDENTITY
 	from INFORMATION_SCHEMA.COLUMNS c 
 		left join INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE cons
-			join INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
-				on tc.CONSTRAINT_NAME = cons.CONSTRAINT_NAME
-					and tc.TABLE_NAME = cons.TABLE_NAME
-					and tc.CONSTRAINT_TYPE = 'PRIMARY KEY'
+			join INFORMATION_SCHEMA.TABLE_CONSTRAINTS tcpk
+				on tcpk.CONSTRAINT_NAME = cons.CONSTRAINT_NAME
+					and tcpk.TABLE_NAME = cons.TABLE_NAME
+					and tcpk.CONSTRAINT_TYPE = 'PRIMARY KEY'
 			on c.TABLE_NAME = cons.TABLE_NAME
 				and c.COLUMN_NAME = cons.COLUMN_NAME
+		left join INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE consfk
+            join INFORMATION_SCHEMA.TABLE_CONSTRAINTS tcfk
+				on tcfk.CONSTRAINT_NAME = consfk.CONSTRAINT_NAME
+					and tcfk.TABLE_NAME = consfk.TABLE_NAME
+					and tcfk.CONSTRAINT_TYPE = 'FOREIGN KEY'
+			on c.TABLE_NAME = consfk.TABLE_NAME
+				and c.COLUMN_NAME = consfk.COLUMN_NAME
 	where
 		c.TABLE_NAME = '%s' 
 	order by c.ORDINAL_POSITION
@@ -117,6 +125,7 @@ func readCols(conn *sql.DB, tableName string) ([]data.Column, error) {
 			Pos:           row["ORDINAL_POSITION"].(int64),
 			Nullable:      row["IS_NULLABLE"].(string) != "NO",
 			PrimaryKey:    row["IS_PRIMARY_KEY"].(int64) == 1,
+			ForeignKey:    row["IS_FOREIGN_KEY"].(int64) == 1,
 			AutoIncrement: row["IS_IDENTITY"].(int64) == 1,
 		}
 		cols = append(cols, col)
